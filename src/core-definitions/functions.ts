@@ -183,9 +183,11 @@ defineFunction(
           break;
         default:
       }
+      let numerEmpty = false;
+      if (args[0]) numerEmpty = args[0]['group'].length === 0;
 
       return new GenfracAtom(
-        !args[0] ? [new PlaceholderAtom()] : argAtoms(args[0]),
+        numerEmpty ? [new PlaceholderAtom()] : argAtoms(args[0]),
         !args[1] ? [new PlaceholderAtom()] : argAtoms(args[1]),
         genfracOptions
       );
