@@ -1159,10 +1159,20 @@ export class Atom<T extends (Argument | null)[] = (Argument | null)[]> {
     context: Context,
     options?: { classes?: string; boxType?: BoxType }
   ): Box {
-    const value = this.value ?? this.body;
+    let value = this.value ?? this.body;
+    let overriddenBoxType;
+
+    if (this.type === 'first') {
+      const { parent, parentBranch } = this;
+      if (parentBranch && parent?.branch(parentBranch)?.length === 1) {
+        // we are a first atom in an "empty group"
+        value = '⊙';
+        overriddenBoxType = 'ord';
+      }
+    }
 
     // Get the right BoxType for this atom type
-    const type = options?.boxType ?? boxType(this.type);
+    const type = overriddenBoxType ?? options?.boxType ?? boxType(this.type);
 
     // The font family is determined by:
     // - the base font family associated with this atom (optional). For example,
